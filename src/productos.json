@@ -1,0 +1,79 @@
+[
+     {
+          "id": 1,
+          "title": "Aceite Menta",
+          "description": "Menta",
+          "code": "Menta001",
+          "price": "120",
+          "status": true,
+          "stock": "1",
+          "category": "Acessorios",
+          "thumbnail": []
+     },
+     {
+          "id": 2,
+          "title": "Practical Metal Gloves",
+          "description": "Handmade",
+          "code": "GB",
+          "price": "826.76",
+          "status": true,
+          "stock": "25",
+          "category": "Acessorios",
+          "thumbnail": []
+     },
+     {
+          "id": 4,
+          "title": "Practical Concrete Pants",
+          "description": "9",
+          "code": "TCP",
+          "price": 38.09,
+          "status": true,
+          "stock": 63,
+          "category": "Acessorios",
+          "thumbnail": []
+     },
+     {
+          "id": 5,
+          "title": "Fantastic Wooden Keyboard",
+          "description": "l",
+          "code": "EXE",
+          "price": 52.53,
+          "status": true,
+          "stock": 63,
+          "category": "Acessorios",
+          "thumbnail": []
+     },
+     {
+          "id": 6,
+          "title": "Handmade Plastic Keyboard",
+          "description": "x",
+          "code": "XML",
+          "price": 407.21,
+          "status": true,
+          "stock": 63,
+          "category": "Acessorios",
+          "thumbnail": []
+     },
+     {
+          "id": 7,
+          "title": "Rustic Concrete Bacon",
+          "description": "e",
+          "code": "AGP",
+          "price": 927.9,
+          "status": true,
+          "stock": 63,
+          "category": "Acessorios",
+          "thumbnail": []
+     },
+     {
+          "id": 8,
+          "title": "Refined Rubber Computer",
+          "description": "4",
+          "code": "5w2u",
+          "price": 584.54,
+          "status": true,
+          "stock": 63,
+          "category": "Acessorios",
+          "thumbnail": []
+     }
+]

@@ -75,5 +75,38 @@
           "stock": 63,
           "category": "Acessorios",
           "thumbnail": []
+     },
+     {
+          "id": 9,
+          "title": "Refined Fresh Salad",
+          "description": "l",
+          "code": "twqy",
+          "price": 492,
+          "status": true,
+          "stock": 50,
+          "category": "Varios",
+          "thumbnail": []
+     },
+     {
+          "id": 10,
+          "title": "Awesome Cotton Fish",
+          "description": "Awesome Cotton Fish",
+          "code": "kob0",
+          "price": 443.62,
+          "status": true,
+          "stock": 50,
+          "category": "Varios",
+          "thumbnail": []
+     },
+     {
+          "id": 12,
+          "title": "Tasty Fresh Shirt",
+          "description": "x",
+          "code": "ls1c",
+          "price": 907.5,
+          "status": true,
+          "stock": 50,
+          "category": "Varios",
+          "thumbnail": []
      }
 ]

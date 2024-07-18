@@ -61,6 +61,7 @@ export class ProductManager {
                 'success': true,
                 'code': 200,
                 'message': `Creado con éxito producto con code: ${code}`,
+                'data': newProduct
             }
         } catch (error) {
             console.log('addProduct error: ',error.message)

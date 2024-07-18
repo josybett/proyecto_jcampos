@@ -1,5 +1,6 @@
 import {Router} from 'express';
 import { ProductManager } from '../productManagerFS.js';
+import { socketServer } from '../app.js'
 
 export const router = Router()
 const pm = new ProductManager();
@@ -30,7 +31,11 @@ router.get('/:pid', async (req,res)=>{
 })
 
 router.post('/', async (req,res)=>{
-    let {success, code, message} = await pm.addProduct(req.body)
+    let {success, code, message, data} = await pm.addProduct(req.body)
+    if (success) {
+        console.log("socket enviando: newProduct, mensaje: ", data)
+        socketServer.emit("newProduct", data)
+    }
     res.setHeader('Content-Type','application/json')
     res.status(code).json({'success': success, 'resultado': message})
 })
@@ -55,6 +60,10 @@ router.delete('/:pid', async (req,res)=>{
         return res.status(400).send('Error, ingrese un argumento id numerico')
     }
     let {success, code, message} = await pm.deleteProductById(id)
+    if (success) {
+        console.log("socket enviando: deleteProduct, mensaje: ", id)
+        socketServer.emit("deleteProduct", id)
+    }
     res.setHeader('Content-Type','application/json')
     res.status(code).json({'success': success, 'resultado': message})
 })

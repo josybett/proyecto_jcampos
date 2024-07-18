@@ -1,0 +1,44 @@
+<h2>Productos en tiempo real</h2>
+<hr>
+<br><br>
+<a href="/">Productos</a>
+<br><br>
+
+<hr>
+<h3>Registrar nuevo Producto</h3>
+<form id="newProduct" onsubmit="newProduct()">
+    <label for="titleProd">Nombre:</label>
+    <input type="text" id="titleProd" name="titleProd" required /><br><br>
+    <label for="descProd">Descripción:</label>
+    <input type="text" id="descProd" name="descProd" required /><br><br>
+    <label for="codeProd">Código:</label>
+    <input type="text" id="codeProd" name="codeProd" required /><br><br>
+    <label for="categoryProd">Categoría:</label>
+    <input type="text" id="categoryProd" name="categoryProd" required /><br><br>
+    <label for="priceProd">Precio:</label>
+    <input type="number" id="priceProd" name="priceProd" required /><br><br>
+    <label for="stockProd">Stock:</label>
+    <input type="number" id="stockProd" name="stockProd" required /><br><br>
+    <input type="submit" value="Registrar" />
+</form>
+<hr>
+<h3>Lista de productos</h3>
+<ul>
+    {{#each products}}
+        <li id={{this.id}}>
+            <button class="btn-delete-product" onclick="deleteProduct({{this.id}})"><i class="fa fa-trash-o" aria-hidden="true"></i></button>  
+            {{this.title}}
+        </li>
+    {{/each}}
+</ul>
+
+<script src="socket.io/socket.io.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="js/products.js"></script>
+<script>
+    let form = document.getElementById("newProduct");
+    function submitForm(event) {
+        event.preventDefault();
+    }
+    form.addEventListener('submit', submitForm);
+   </script>

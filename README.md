@@ -1,7 +1,13 @@
 # proyecto_jcampos
 Proyecto Backend
 
-## 1era Pre-entrega
+## Pruebas
+Ejecuta las pruebas con:
+```sh
+npm start
+```
+
+## Rutas de API
 ### Api de producto
 - [x] Crear un producto
 http://localhost:8080/api/products/
@@ -35,3 +41,14 @@ http://localhost:8080/api/carts/:idCarrito/product/:idProducto
 - [x] Consultar productos del carrito
 http://localhost:8080/api/carts/:id
 ![alt text](src/images/postman/image-1.png)
+
+## Rutas de Views
+- [x] Lista de Productos
+http://localhost:8080/
+Esta lista muestra todos los productos almacenados. Tiene un hipervínculo para ir a [Lista de Productos con websocket] (#lista-de-productos-con-websocket).
+![alt text](src/images/postman/image-8.png)
+
+- [x] Lista de Productos con websocket
+http://localhost:8080/realtimeproducts
+Lista de productos con websocket en donde se visualiza el cambio si se agrega o elimina un producto. Tiene hipervínculo a [Lista de Productos] (#lista-de-productos)
+![alt text](src/images/postman/image-9.png)

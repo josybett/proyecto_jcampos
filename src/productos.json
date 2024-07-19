@@ -221,24 +221,13 @@
      },
      {
           "id": 27,
-          "title": "Intelligent Plastic Computer",
-          "description": "0",
-          "code": "0gio",
-          "price": 153.27,
+          "title": "Incredible Rubber Gloves",
+          "description": "z",
+          "code": "v6q5",
+          "price": 444.55,
           "status": true,
           "stock": 50,
           "category": "Varios",
-          "thumbnail": []
-     },
-     {
-          "id": 28,
-          "title": "popo",
-          "description": "popo",
-          "code": "popop",
-          "price": 777,
-          "status": true,
-          "stock": 8,
-          "category": "popopo",
           "thumbnail": []
      }
 ]

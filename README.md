@@ -6,6 +6,7 @@ Ejecuta las pruebas con:
 ```sh
 npm start
 ```
+Nota: actualmente está configurado con el puerto 8080
 
 ## Rutas de API
 ### Api de producto
@@ -45,10 +46,10 @@ http://localhost:8080/api/carts/:id
 ## Rutas de Views
 - [x] Lista de Productos
 http://localhost:8080/
-Esta lista muestra todos los productos almacenados. Tiene un hipervínculo para ir a [Lista de Productos con websocket] (#lista-de-productos-con-websocket).
+Esta lista muestra todos los productos almacenados. Tiene un hipervínculo para ir a lista de productos con websocket.
 ![alt text](src/images/postman/image-8.png)
 
 - [x] Lista de Productos con websocket
 http://localhost:8080/realtimeproducts
-Lista de productos con websocket en donde se visualiza el cambio si se agrega o elimina un producto. Tiene hipervínculo a [Lista de Productos] (#lista-de-productos)
+Lista de productos con websocket en donde se visualiza el cambio si se agrega o elimina un producto. Tiene hipervínculo a lista de productos
 ![alt text](src/images/postman/image-9.png)

@@ -47,9 +47,11 @@ http://localhost:8080/api/carts/:id
 - [x] Lista de Productos
 http://localhost:8080/
 Esta lista muestra todos los productos almacenados. Tiene un hipervínculo para ir a lista de productos con websocket.
+
 ![alt text](src/images/postman/image-8.png)
 
 - [x] Lista de Productos con websocket
 http://localhost:8080/realtimeproducts
-Lista de productos con websocket en donde se visualiza el cambio si se agrega o elimina un producto. Tiene hipervínculo a lista de productos
+Lista de productos con websocket en donde se visualiza el cambio si se agrega o elimina un producto. Tiene hipervínculo a lista de productos.
+
 ![alt text](src/images/postman/image-9.png)

@@ -25,8 +25,8 @@
 <h3>Lista de productos</h3>
 <ul>
     {{#each products}}
-        <li id={{this.id}}>
-            <button class="btn-delete-product" onclick="deleteProduct({{this.id}})"><i class="fa fa-trash-o" aria-hidden="true"></i></button>  
+        <li id={{this._id}}>
+            <button class="btn-delete-product" onclick="deleteProduct('{{this._id}}')"><i class="fa fa-trash-o" aria-hidden="true"></i></button>  
             {{this.title}}
         </li>
     {{/each}}

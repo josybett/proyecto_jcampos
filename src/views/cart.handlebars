@@ -1,0 +1,79 @@
+<section id="cart_items">
+		<div class="container">
+			<div class="breadcrumbs">
+				<ol class="breadcrumb">
+                    <li><a href="/">Productos</a></li>
+                    <li class="active">Carrito de Compras</li>
+				</ol>
+			</div>
+			<div class="table-responsive cart_info">
+				<table class="table table-condensed">
+					<thead>
+						<tr class="cart_menu">
+							<td class="description">Producto</td>
+							<td class="price">Precio</td>
+							<td class="quantity">Cantidad</td>
+							<td class="total">Total</td>
+							<td></td>
+						</tr>
+					</thead>
+					<tbody>
+                        {{#each cart.products}}
+                            <tr>
+                                <td class="cart_description">
+                                    <h4><a href="">{{this.product.title}}</a></h4>
+                                    <p>{{this.product.code}}</p>
+                                </td>
+                                <td class="cart_price">
+                                    <p>${{this.product.price}}</p>
+                                </td>
+                                <td class="cart_quantity">
+                                    <div class="cart_quantity_button">
+                                        <a class="cart_quantity_up" onclick="addCartProduct('{{this.product.._id}}')"> + </a>
+                                        <input class="cart_quantity_input" type="text" name="quantity" value="{{this.quantity}}" autocomplete="off" size="2">
+                                        <a class="cart_quantity_down" href=""> - </a>
+                                    </div>
+                                </td>
+                                <td class="cart_total">
+                                    <p class="cart_total_price">${{this.product.price}}</p>
+                                </td>
+                                <td class="cart_delete">
+                                    <a class="cart_quantity_delete" href="">Eliminar</a>
+                                </td>
+                            </tr>
+                        {{/each}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>
+
+	<section id="do_action">
+		<div class="container">
+			<div class="heading">
+				<h3>Datos del cliente</h3>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="total_area">
+						<ul>
+							<li>
+                            <input name="nombre" type="text" placeholder="Nombre" required />
+                        </li>
+							<li>
+                            <input name="apellido" type="text" placeholder="Apellido" required />
+                        </li>
+							<li>
+                            <input name="email" type="email" placeholder="Email" required />
+                        </li>
+						</ul>
+							<a class="btn btn-default update" href="">Guardar orden</a>
+							<a class="btn btn-default check_out" href="">Cancelar</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="js/home.js"></script>

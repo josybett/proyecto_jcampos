@@ -1,7 +1,8 @@
 import path from 'path'
 import fs from 'fs'
-import __dirname from './utils.js';
-import { ProductManager } from './productManagerFS.js';
+import __dirname from '../../utils.js';
+import { ProductManager } from './productManagerMongo.js';
+
 
 export class CartsManager {
     constructor() {

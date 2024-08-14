@@ -1,0 +1,39 @@
+<section>
+    <div class="container">
+        <div class="breadcrumbs">
+            <ol class="breadcrumb">
+                <li><a href="/realtimeproducts">Productos en tiempo real</a></li>
+                <li><a href="/cart/66bc1b0efbb194ff336a9e22">Ver Carrito</a></li>
+                <li><a href="/">Lista de Productos</a></li>
+                <li class="active">Detalle de producto</li>
+            </ol>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 padding-right">
+                <div class="features_items">
+                    <h2 class="title text-center">Producto {{producto.title}}</h2>
+                    <div class="col-sm-12">
+                        <div class="product-image-wrapper">
+                            <div class="single-products">
+                                <div class="productinfo text-center">
+                                    <img src="/images/shop/logo.jpg" alt="" />
+                                    <h3>${{producto.price}}</h3>
+                                    <h4>Stock: {{producto.stock}}</h4>
+                                    <p><strong>Código referencial:</strong> {{producto.code}}</p>
+                                    <p><strong>Categoría:</strong> {{producto.code}}</p>
+                                    <p><strong>Descripción:</strong> {{producto.description}}</p>
+                                    <button onclick="addCartProduct('{{producto._id}}')" class="btn btn-default add-to-cart" id="add-to-cart">
+                                        <i class="fa fa-shopping-cart"></i>Agregar al carrito
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="js/home.js"></script>

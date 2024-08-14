@@ -1,15 +1,81 @@
-<h2>Productos</h2>
-<hr>
-<br><br>
-<a href="/realtimeproducts">Productos en tiempo real</a>
+<section>
+    <div class="container">
+        <div class="breadcrumbs">
+            <ol class="breadcrumb">
+                <li><a href="/realtimeproducts">Productos en tiempo real</a></li>
+                <li><a href="/cart/66bc1b0efbb194ff336a9e22">Ver Carrito</a></li>
+                <li class="active">Lista de Productos</li>
+            </ol>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="btn-group pull-right">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Orden por precio - ASC
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="" id="asc_button">Ascendente</a></li>
+                            <li><a href="" id="des_button">Descendente</a></li>
+                        </ul>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Limit
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="" id="3_button">3</a></li>
+                            <li><a href="" id="5_button">5</a></li>
+                            <li><a href="" id="10_button">10</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 padding-right">
+                <div class="features_items">
+                    <h2 class="title text-center">Productos</h2>
+                    {{#each products.payload}}
+                        <div class="col-sm-4">
+                            <div class="product-image-wrapper">
+                                <div class="single-products">
+                                    <div class="productinfo text-center">
+                                        <img src="images/shop/logo.jpg" alt="" />
+                                        <h2>${{this.price}}</h2>
+                                        <p>{{this.title}}</p>
+                                        <button onclick="addCartProduct('{{this._id}}')" class="btn btn-default add-to-cart" id="add-to-cart">
+                                            <i class="fa fa-shopping-cart"></i>Agregar al carrito
+                                        </button>
+                                        <a href="/detail/{{this._id}}" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Ver Productos</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
 
-<hr>
-<ul>
-    {{#each products}}
-        <li>{{this.title}}</li>
-    {{/each}}
-</ul>
+                <ul class="pagination">
+                    {{#if products.prevPage}}
+                        <li><button onclick="filtroPage({{products.prevPage}})">
+                            < pag anterior
+                        </button></li>
+                    {{/if}}
+                    <li class="active">
+                        <a href="">
+                            {{products.page}}
+                        </a>
+                    </li>
+                    {{#if products.nextPage}}
+                        <li><button onclick="filtroPage({{products.nextPage}})" >
+                            > pag siguiente
+                        </button></li>
+                    {{/if}}
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
 
-{{!-- <script src="/socket.io/socket.io.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="js/products.js"></script> --}}
+<script src="js/home.js"></script>

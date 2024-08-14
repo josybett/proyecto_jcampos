@@ -99,7 +99,7 @@ socket.on("newProduct", product=>{
     let ulProducts = document.querySelector('ul')
     let liNew = document.createElement('li')
     liNew.id = product.id
-    liNew.innerHTML = `<button class="btn-delete-product" onclick="deleteProduct(${product.id})"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+    liNew.innerHTML = `<button class="btn-delete-product" onclick="deleteProduct(${product._id})"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
                         ${product.title}`
     ulProducts.append(liNew)
 })

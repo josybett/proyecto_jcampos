@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import { ProductManager } from '../productManagerFS.js';
+import { ProductManager } from '../dao/productManagerFS.js';
 import { socketServer } from '../app.js'
 
 export const router = Router()

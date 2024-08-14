@@ -29,16 +29,16 @@
                                 </td>
                                 <td class="cart_quantity">
                                     <div class="cart_quantity_button">
-                                        <a class="cart_quantity_up" onclick="addCartProduct('{{this.product.._id}}')"> + </a>
                                         <input class="cart_quantity_input" type="text" name="quantity" value="{{this.quantity}}" autocomplete="off" size="2">
-                                        <a class="cart_quantity_down" href=""> - </a>
                                     </div>
                                 </td>
                                 <td class="cart_total">
                                     <p class="cart_total_price">${{this.product.price}}</p>
                                 </td>
                                 <td class="cart_delete">
-                                    <a class="cart_quantity_delete" href="">Eliminar</a>
+                                    <button onclick="deleteProdCart('{{this.product._id}}')" class="cart_quantity_delete" href="">
+										Eliminar
+									</button>
                                 </td>
                             </tr>
                         {{/each}}

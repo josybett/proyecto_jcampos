@@ -92,3 +92,17 @@ function filtroPage(page) {
     params.page = page;
     window.location.href = window.location.pathname+"?"+$.param(params)
 }
+
+async function deleteProdCart(id) {
+    let response = await fetch(`http://localhost:8080/api/carts/66bc1b0efbb194ff336a9e22/products/${id}`, {
+        method: 'DELETE'
+    });
+    let data = await response.json()
+    console.log("deleteProdCart: ", data)
+    if (data.success) {
+        Swal.fire("Producto eliminado del carrito exitosamente", "", "success");
+    } else {
+        Swal.fire("Ha ocurrido un error", "", "error");
+    }
+    window.location.href = window.location.pathname
+}

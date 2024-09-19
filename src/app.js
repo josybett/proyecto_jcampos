@@ -8,6 +8,15 @@ import { Server } from 'socket.io'
 import { router as productRouter } from './routes/productsRouter.js'
 import { router as cartsRouter } from './routes/cartsRouter.js'
 import mongoose from 'mongoose'
+import passport from 'passport'
+import initializePassport from './config/passport.config.js'
+import sessionsRouter from './routes/sessions.js'
+import session from 'express-session'
+import MongoStore from 'connect-mongo'
+import cookieParser from 'cookie-parser'
+import FileStore from 'session-file-store'
+
+const fileStorage = FileStore(session)
 
 const PORT = 8080;
 
@@ -25,6 +34,22 @@ app.use('/api/products', productRouter)
 app.use('/api/carts', cartsRouter)
 app.use('/', viewsRouter)
 
+app.use(cookieParser())
+app.use(session({
+    secret: 'secretkey',
+    resave: false,
+    saveUninitialized: true,
+    store: MongoStore.create({
+        mongoUrl: 'mongodb+srv://josycamgon:BohG2TFXz7D0ogDJ@atlascluster.jpwmt.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster',
+        ttl: 15,
+    })
+}))
+initializePassport()
+app.use(passport.initialize())
+app.use(passport.session())
+
+app.use('/api/sessions', sessionsRouter)
+
 const httpServer = app.listen(PORT, () => console.log(`Server escuchando en puerto ${PORT}`))
 export const socketServer = new Server(httpServer)
 socketServer.on("connect", () => {
@@ -34,7 +59,8 @@ socketServer.on("connect", () => {
 // export default socketServer
 
 try {
-    await mongoose.connect('mongodb+srv://<USUARIO>:<CLAVE>@cluster0.3lvxg2p.mongodb.net/?retryWrites=true&w=majority&dbName=ecommerce')
+    await mongoose.connect('mongodb+srv://josycamgon:BohG2TFXz7D0ogDJ@atlascluster.jpwmt.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster')
+    // await mongoose.connect('mongodb+srv://<USUARIO>:<CLAVE>@cluster0.3lvxg2p.mongodb.net/?retryWrites=true&w=majority&dbName=ecommerce')
     console.log('DB conectada')
     
 } catch (error) {

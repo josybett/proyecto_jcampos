@@ -1,12 +1,13 @@
 import { Router } from "express";
 import { ProductManagerMongo } from "../dao/classes/productManagerMongo.js";
 import { CartsManagerMongo } from '../dao/classes/cartsManagerMongo.js';
+import { isAuthenticated, isNotAuthenticated } from '../middleware/auth.js';
 
 export const router = Router()
 const pm = new ProductManagerMongo()
 const cm = new CartsManagerMongo()
 
-router.get('/', async (req, res) => {
+router.get('/', isAuthenticated, async (req, res) => {
     let products = await pm.getProducts(req.query)
     console.log('home', products)
     res.status(200).render('home', {products})
@@ -28,4 +29,12 @@ router.get('/cart/:cid', async (req, res) => {
     let cart = await cm.getCartById(id)
     console.log('cart', {cart: cart.data})
     res.status(200).render('cart', {cart: cart.data})
+})
+
+router.get('/login', isNotAuthenticated, (req, res) => {
+    res.render('login');
+})
+
+router.get('/register', isNotAuthenticated, (req, res) => {
+    res.render('register');
 })

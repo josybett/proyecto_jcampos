@@ -3,6 +3,7 @@ import local from 'passport-local'
 import { usersModel } from '../dao/models/userModel.js'
 import { createHash, isValidPassword, generateToken, SECRETKEY } from '../utils.js'
 import passportJWT from 'passport-jwt'
+import { UserReadDTO, UserSaveDTO } from "../DTO/userDto.js";
 
 const LocalStrategy = local.Strategy
 
@@ -36,7 +37,7 @@ const initializePassport = () => {
                 password: createHash(password)
             }
 
-            let result = await usersModel.create(newUser)
+            let result = await usersModel.create(new UserSaveDTO(newUser))
             return done(null, result)
         } catch (error) {
             return done("Error al obtener el usuario" + error)

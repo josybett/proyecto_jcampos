@@ -1,5 +1,6 @@
 import passport from 'passport'
 import { generateToken } from '../utils.js'
+import { UserReadDTO } from '../DTO/userDto.js'
 
 export const sessionRegister = async (req, res) => {
     res.send({ status: "success", message: "usuario registrado" })
@@ -35,5 +36,6 @@ export const sessionLogout = (req, res) => {
 }
 
 export const sessionCurrent = (req, res) => {
-    res.send(req.user);
+    const user = new UserReadDTO(req.user)
+    res.send(user);
 }

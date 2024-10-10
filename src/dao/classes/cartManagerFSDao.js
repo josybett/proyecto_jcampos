@@ -4,7 +4,7 @@ import __dirname from '../../utils.js';
 import { ProductManager } from './productManagerMongo.js';
 
 
-export class CartsManager {
+export class CartsManagerFSDao {
     constructor() {
         this.path = path.join(__dirname, 'carritos.json')
     }
@@ -61,8 +61,17 @@ export class CartsManager {
         }
     }
 
-    async getCartById(id) {
+    async getCartById(req) {
         try {
+            let id = req.params.cid
+            id=parseInt(id)  
+            if(isNaN(id)){
+                return {
+                    'success': false,
+                    'code': 400,
+                    'message': `Error, ingrese un argumento id numerico`,
+                }
+            }
             let carts = await this.getCarts();
             let cart = carts.find(c=>c.id===id)
             if (!cart) {
@@ -89,7 +98,28 @@ export class CartsManager {
         }
     }
 
-    async updateCarts(id, pid, qt) {
+    async updateCarts(req) {
+        let cid = req.params.cid
+        let pid = req.params.pid
+        let qt = req.body?.quantity ?? 1
+        id = parseInt(cid)  
+        pid = parseInt(pid)  
+        qt = parseInt(qt)
+        if (isNaN(id) || isNaN(pid) || isNaN(qt)) {
+            return {
+                'success': false,
+                'code': 400,
+                'message': `Error, ingrese un argumento id numerico`
+            }
+        }
+        if (qt <= 0) {
+            return {
+                'success': false,
+                'code': 400,
+                'message': `Error, quantity debe ser mayor a 0`
+            }
+        }
+
         let carts = await this.getCarts()
         let indexCart = carts.findIndex(c=>c.id===id)
         if (indexCart === -1) {

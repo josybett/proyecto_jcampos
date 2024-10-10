@@ -1,7 +1,8 @@
 import { productModel } from "../models/productModel.js"
 import { logError } from "../../utils.js"
+import mongoose from "mongoose"
 
-export class ProductManagerMongo {
+export class ProductManagerDao {
 
     async addProduct(request) {
         console.log(request)
@@ -121,14 +122,34 @@ export class ProductManagerMongo {
     }
 
     async getProductById(id) {
+        if(!mongoose.Types.ObjectId.isValid(id)){
+            return {
+                'success': false,
+                'code': 400,
+                'message': `Ingrese un argumento id válido`,
+                'data': []
+            }
+        }
         let product = []
         try {
             product = await productModel.findOne({_id: id, delete:false})
             if (!product) {
                 console.log('Not found')
+                return {
+                    'success': false,
+                    'code': 404,
+                    'message': `No existe producto con id: ${id}`,
+                    'data': []
+                }
             }
         } catch (error) {
             console.log('getProductById error mongose: ',error.message)
+            return {
+                'success': false,
+                'code': 500,
+                'message': `Ocurrió un error, intente de nuevo`,
+                'data': []
+            }
         }
         return product
     }

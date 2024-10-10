@@ -1,9 +1,9 @@
 import { cartsModel } from "../models/cartModel.js"
 import { logError } from "../../utils.js"
 import mongoose from "mongoose"
-import { ProductManagerMongo } from "./productManagerMongo.js"
+import { ProductManagerDao } from "./productManagerDao.js"
 
-export class CartsManagerMongo {
+export class CartsManagerDao {
     
     async addCarts(request) {
         try {
@@ -69,6 +69,21 @@ export class CartsManagerMongo {
                 'message': `Ingesar un id válido`,
             }
         }
+        qt=parseInt(qt)
+        if(isNaN(qt)){
+            return {
+                'success': false,
+                'code': 400,
+                'message': `quantity debe ser numérico`,
+            }
+        }
+        if(qt <= 0){
+            return {
+                'success': false,
+                'code': 400,
+                'message': `quantity debe ser mayor a 0`,
+            }
+        }
         let cart = {}
         let resultado = {}
         let resp = {
@@ -103,7 +118,7 @@ export class CartsManagerMongo {
                 quantity: ( Number(productsCarts[index].quantity) + Number(qt))
             }
         } else {
-            const pm = new ProductManagerMongo()
+            const pm = new ProductManagerDao()
             let prodById = await pm.getProductById(pid)
             if (!Array.isArray(prodById)) {
                 productsCarts.push(prod)
@@ -184,6 +199,22 @@ export class CartsManagerMongo {
     }
 
     async updateCartsById(id, products) {
+        if(!mongoose.Types.ObjectId.isValid(id)) {
+            return {
+                'success': false,
+                'code': 400,
+                'message': `Ingrese un argumento id válido`,
+                'data': resultado
+            }
+        }
+        if (!Array.isArray(products)) {
+            return {
+                'success': false,
+                'code': 400,
+                'message': `products debe ser un array`,
+                'data': resultado
+            }
+        }
         let cart = {}
         let resultado = {}
         let resp = {
@@ -222,6 +253,15 @@ export class CartsManagerMongo {
     }
 
     async deleteCartProduct(id) {
+        if(!mongoose.Types.ObjectId.isValid(cid)) {
+            return {
+                'success': false,
+                'code': 400,
+                'message': `Ingrese un argumento id válido`,
+                'data': resultado
+            }
+        }
+
         let cart = {}
         let resultado = {}
         let resp = {

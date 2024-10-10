@@ -10,15 +10,16 @@ import { router as cartsRouter } from './routes/cartsRouter.js'
 import mongoose from 'mongoose'
 import passport from 'passport'
 import initializePassport from './config/passport.config.js'
-import sessionsRouter from './routes/sessions.js'
+import sessionsRouter from './routes/sessionsRouter.js'
 import session from 'express-session'
 import MongoStore from 'connect-mongo'
 import cookieParser from 'cookie-parser'
 import FileStore from 'session-file-store'
+import { config } from './config/config.js'
 
 const fileStorage = FileStore(session)
 
-const PORT = 8080;
+const PORT = config.PORT;
 
 const app = express();
 app.use(express.json());
@@ -40,7 +41,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({
-        mongoUrl: 'mongodb+srv://josycamgon:BohG2TFXz7D0ogDJ@atlascluster.jpwmt.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster',
+        mongoUrl: config.MONGO_URL,
         ttl: 15,
     })
 }))
@@ -59,8 +60,7 @@ socketServer.on("connect", () => {
 // export default socketServer
 
 try {
-    await mongoose.connect('mongodb+srv://josycamgon:BohG2TFXz7D0ogDJ@atlascluster.jpwmt.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster')
-    // await mongoose.connect('mongodb+srv://<USUARIO>:<CLAVE>@cluster0.3lvxg2p.mongodb.net/?retryWrites=true&w=majority&dbName=ecommerce')
+    await mongoose.connect(config.MONGO_URL)
     console.log('DB conectada')
     
 } catch (error) {

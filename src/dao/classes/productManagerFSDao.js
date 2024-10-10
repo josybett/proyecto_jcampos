@@ -2,7 +2,7 @@ import path from 'path'
 import fs from 'fs'
 import __dirname from '../../utils.js';
 
-export class ProductManager {
+export class ProductManagerFSDao {
     constructor() {
         this.products = []
         this.path = path.join(__dirname, 'productos.json')
@@ -114,6 +114,14 @@ export class ProductManager {
 
     async updateProduct(id, updProduct) {
         try {
+            id = parseInt(id)  
+            if (isNaN(id)) {
+                return {
+                    'success': false,
+                    'code': 400,
+                    'message': `Error, ingrese un argumento id numerico`,
+                }
+            }
             let products = await this.getProducts();
             let indexProduct = products.findIndex(prod=>prod.id===id)
             if (indexProduct === -1) {
@@ -154,6 +162,14 @@ export class ProductManager {
 
     async deleteProductById(id) {
         try {
+            id = parseInt(id)  
+            if (isNaN(id)) {
+                return {
+                    'success': false,
+                    'code': 400,
+                    'message': `Error, ingrese un argumento id numerico`,
+                }
+            }
             let products = await this.getProducts();
             let indexProduct = products.findIndex(prod=>prod.id===id)
             if (indexProduct === -1) {

@@ -151,7 +151,12 @@ export class ProductManagerDao {
                 'data': []
             }
         }
-        return product
+        return {
+            'success': true,
+            'code': 200,
+            'message': `Producto encontrado con id: ${id}`,
+            'data': product
+        }
     }
 
     async updateProduct(id, updProduct) {

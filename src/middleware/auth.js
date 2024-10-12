@@ -13,3 +13,20 @@ export const isNotAuthenticated = (req, res, next) => {
         res.redirect('/');
     }
 };
+
+export const isAuthenticatedLogin = (req, res, next) => {
+    if (req.user) {
+        return next();
+    } else {
+        return res.status(401).json({ message: 'No autorizado' });
+    }
+};
+
+export const hasRole = (roles) => { 
+    return (req, res, next) => {
+    if (!req.user || !roles.includes(req.user.role)) { 
+        return res.status(403).json({ message: 'Acceso prohibido' });
+    }
+    next();
+    };
+};

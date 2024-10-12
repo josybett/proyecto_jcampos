@@ -2,6 +2,10 @@ import { cartsModel } from "../models/cartModel.js"
 import { logError } from "../../utils.js"
 import mongoose from "mongoose"
 import { ProductManagerDao } from "./productManagerDao.js"
+import { ticketModel } from "../models/ticketModel.js"
+import { v4 as uuidv4 } from 'uuid';
+import { UserReadDTO } from "../../DTO/userDto.js"
+import { productModel } from "../models/productModel.js"
 
 export class CartsManagerDao {
     
@@ -296,5 +300,121 @@ export class CartsManagerDao {
             return logError('deleteCartProduct error mongoose: ', 500, error)
         }
         return resp
+    }
+
+    async purchaseCart(idCart, req) {
+        try {
+            const session = await mongoose.startSession()
+            session.startTransaction()
+
+            const user = new UserReadDTO(req.user)
+            let cart = {}
+            let products = []
+            let productsNoStock = []
+            let productsTicket = []
+            let resultUpdCart = {}
+            let newTicket = {}
+            let message = 'Compra no procesada'
+            if(!mongoose.Types.ObjectId.isValid(idCart)) {
+                return {
+                    'success': false,
+                    'code': 400,
+                    'message': `Ingesar un id válido`,
+                }
+            }
+            try {
+                cart = await cartsModel.findOne({_id: idCart})
+                products = cart?.products
+            } catch (error) {
+                return logError('updateCarts error mongose: ', 500, error)
+            }
+            if (cart == {}) {
+                return {
+                    'success': false,
+                    'code': 404,
+                    'message': `No existe carrito con id: ${id}`
+                }
+            }
+            
+            for (const item of products) {
+                const producto = await productModel.findById(item.product).session(session); // Usar la sesión
+        
+                if (!producto || producto.stock < item.quantity) {
+                    productsNoStock.push({product: item.produc,  quantity: item.quantity})
+                } else {
+                    productsTicket.push({product: item.product, quantity: item.quantity})
+                }
+            }
+
+            if (productsTicket.length > 0) {
+                const [sumaTotalTickets] = await cartsModel.aggregate([
+                    { $unwind: '$products' },
+                    { $lookup: {
+                        from: 'products',
+                        localField: 'products.product',
+                        foreignField: '_id',
+                        as: 'productInfo'
+                    }},
+                    { $unwind: '$productInfo' },
+                    {$project: {
+                        'products.product': 1,
+                        'products.quantity': 1,
+                        'productInfo.price': 1,
+                        subtotal: { $multiply: ['$products.quantity', '$productInfo.price'] }
+                    }},
+                    {$group: {
+                        _id: '$_id',
+                        products: { $push: '$products' },
+                        amount: { $sum: '$subtotal' }
+                    }}
+                ], { session });
+                
+                console.log(sumaTotalTickets.amount);
+                try {
+                    [newTicket] = await ticketModel.create([{
+                        code: uuidv4(),
+                        purchaser: user.email,
+                        purchase_datetime: new Date(),
+                        amount: sumaTotalTickets.amount,
+                        products: productsTicket
+                    }], { session })
+                    console.log(newTicket)
+                } catch (error) {
+                    return logError('addCarts error mongoose: ', 500, error)
+                }
+                for (const item of productsTicket) {
+                    await productModel.findByIdAndUpdate(item.product, { $inc: { stock: -item.quantity } }).session(session); 
+                }
+    
+                resultUpdCart = await cartsModel.updateOne({_id: idCart }, { product: productsNoStock }).session(session)
+                console.log('resultUpdCart',resultUpdCart)
+                if(resultUpdCart.modifiedCount == 0) {
+                    resp = {
+                        'success': true,
+                        'code': 400,
+                        'message': `No se concretó la modificación con id: ${id}`,
+                    }
+                }
+                message = `Creado ticket: ${newTicket.code}`
+            }
+
+            await session.commitTransaction();
+            session.endSession();
+
+            return {
+                'success': true,
+                'code': 200,
+                'message': message
+            }
+        } catch (error) {
+            console.error('Error al realizar la compra:', error);
+            await session.abortTransaction();
+            session.endSession();
+            return {
+                'success': false,
+                'code': 500,
+                'message': `Ocurrió un error intente de nuevo`
+            }
+        }
     }
 }

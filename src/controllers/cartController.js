@@ -54,3 +54,11 @@ export const deleteCart = async (req,res)=>{
     let {success, code, message, data} = await cm.deleteCartProduct(cid)
     res.status(code).json({'success': success, 'resultado': message})
 }
+
+export const purchaseCart = async (req, res) => {
+    let cid = req.params.cid
+    res.setHeader('Content-Type', 'application/json');
+
+    let {success, code, message, data} = await cm.purchaseCart(cid, req)
+    res.status(code).json({'success': success, 'resultado': message})
+}

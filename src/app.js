@@ -1,7 +1,5 @@
 import express from 'express'
 import handlebars from 'express-handlebars'
-// import { router as productRouter } from './routes/productRouter.js'
-// import { router as cartsRouter } from './routes/cartRouter.js'
 import { router as viewsRouter } from './routes/viewsRouter.js'
 import __dirname from './utils.js'
 import { Server } from 'socket.io'
@@ -25,16 +23,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
-//configurar Handlebars para leer el contenido de los endpoints
-app.engine('handlebars', handlebars.engine())
-app.set('views', __dirname + '/views')
-app.set('view engine', 'handlebars')
-app.use(express.static(__dirname + '/public'))
-
-app.use('/api/products', productRouter)
-app.use('/api/carts', cartsRouter)
-app.use('/', viewsRouter)
-
+// passport
 app.use(cookieParser())
 app.use(session({
     secret: 'secretkey',
@@ -49,7 +38,17 @@ initializePassport()
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.use('/api/sessions', sessionsRouter)
+
+//configurar Handlebars para leer el contenido de los endpoints
+app.engine('handlebars', handlebars.engine())
+app.set('views', __dirname + '/views')
+app.set('view engine', 'handlebars')
+app.use(express.static(__dirname + '/public'))
+
+app.use('/api/products', passport.authenticate('jwt', { failureRedirect: '/faillogin' }), productRouter)
+app.use('/api/carts', passport.authenticate('jwt', { failureRedirect: '/faillogin' }), cartsRouter)
+app.use('/', viewsRouter)
+app.use('/api/sessions', passport.authenticate('jwt', { failureRedirect: '/faillogin' }), sessionsRouter)
 
 const httpServer = app.listen(PORT, () => console.log(`Server escuchando en puerto ${PORT}`))
 export const socketServer = new Server(httpServer)

@@ -1,4 +1,3 @@
-import passport from 'passport'
 import { generateToken } from '../utils.js'
 import { UserReadDTO } from '../DTO/userDto.js'
 
@@ -20,7 +19,7 @@ export const sessionLogin = async (req, res) => {
         email: req.user.email
     }
     let token = generateToken(req.user)
-    res.cookie("coderCookie", token, {maxAge:1000*60*60, httpOnly:true})
+    res.cookie("coderCookie", token, {maxAge:10000*60*60, httpOnly:true})
     res.send({ status: "success", payload:  token})
 }
 
@@ -31,6 +30,7 @@ export const sessionFailLogin = (req, res) => {
 export const sessionLogout = (req, res) => {
     req.session.destroy((err) => {
         if (err) return res.status(500).send('Error al cerrar sesión');
+        res.status(200).send('Sesión finalizada!');
         res.redirect('/login');
     });
 }

@@ -76,7 +76,7 @@ const initializePassport = () => {
         },
         async(contenidoToken , done)=>{
             try {
-                console.log(contenidoToken)
+                console.log('middleware jwt',contenidoToken)
                 return done(null, contenidoToken)
             } catch (error) {
                 return done(error)

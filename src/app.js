@@ -14,6 +14,7 @@ import MongoStore from 'connect-mongo'
 import cookieParser from 'cookie-parser'
 import FileStore from 'session-file-store'
 import { config } from './config/config.js'
+import { sessionFailLogin } from './controllers/sessionsController.js'
 
 const fileStorage = FileStore(session)
 
@@ -48,7 +49,8 @@ app.use(express.static(__dirname + '/public'))
 app.use('/api/products', passport.authenticate('jwt', { failureRedirect: '/faillogin' }), productRouter)
 app.use('/api/carts', passport.authenticate('jwt', { failureRedirect: '/faillogin' }), cartsRouter)
 app.use('/', viewsRouter)
-app.use('/api/sessions', passport.authenticate('jwt', { failureRedirect: '/faillogin' }), sessionsRouter)
+app.use('/api/sessions', sessionsRouter)
+app.use('/faillogin', sessionFailLogin)
 
 const httpServer = app.listen(PORT, () => console.log(`Server escuchando en puerto ${PORT}`))
 export const socketServer = new Server(httpServer)

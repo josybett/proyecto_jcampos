@@ -6,6 +6,8 @@ import { ticketModel } from "../models/ticketModel.js"
 import { v4 as uuidv4 } from 'uuid';
 import { UserReadDTO } from "../../DTO/userDto.js"
 import { productModel } from "../models/productModel.js"
+import { ticket } from "../../controllers/ticketPdfController.js"
+import { sendEmail } from "../../controllers/emailController.js"
 
 export class CartsManagerDao {
     
@@ -304,8 +306,8 @@ export class CartsManagerDao {
 
     async purchaseCart(idCart, req) {
         try {
-            const session = await mongoose.startSession()
-            session.startTransaction()
+            const sessionMongo = await mongoose.startSession()
+            sessionMongo.startTransaction()
 
             const user = new UserReadDTO(req.user)
             let cart = {}
@@ -337,7 +339,7 @@ export class CartsManagerDao {
             }
             
             for (const item of products) {
-                const producto = await productModel.findById(item.product).session(session); // Usar la sesión
+                const producto = await productModel.findById(item.product).session(sessionMongo); // Usar la sesión
         
                 if (!producto || producto.stock < item.quantity) {
                     productsNoStock.push({product: item.produc,  quantity: item.quantity})
@@ -367,7 +369,7 @@ export class CartsManagerDao {
                         products: { $push: '$products' },
                         amount: { $sum: '$subtotal' }
                     }}
-                ], { session });
+                ], { sessionMongo });
                 
                 console.log(sumaTotalTickets.amount);
                 try {
@@ -377,16 +379,17 @@ export class CartsManagerDao {
                         purchase_datetime: new Date(),
                         amount: sumaTotalTickets.amount,
                         products: productsTicket
-                    }], { session })
+                    }], { sessionMongo })
                     console.log(newTicket)
                 } catch (error) {
                     return logError('addCarts error mongoose: ', 500, error)
                 }
                 for (const item of productsTicket) {
-                    await productModel.findByIdAndUpdate(item.product, { $inc: { stock: -item.quantity } }).session(session); 
+                    await productModel.findByIdAndUpdate(item.product, { $inc: { stock: -item.quantity } }).session(sessionMongo); 
                 }
     
-                resultUpdCart = await cartsModel.updateOne({_id: idCart }, { product: productsNoStock }).session(session)
+                resultUpdCart = await cartsModel.updateOne({_id: idCart }, { products: productsNoStock }).session(sessionMongo)
+                
                 console.log('resultUpdCart',resultUpdCart)
                 if(resultUpdCart.modifiedCount == 0) {
                     resp = {
@@ -398,8 +401,13 @@ export class CartsManagerDao {
                 message = `Creado ticket: ${newTicket.code}`
             }
 
-            await session.commitTransaction();
-            session.endSession();
+            await sessionMongo.commitTransaction()
+            sessionMongo.endSession()
+
+            const pdf = await ticket()
+            console.error('pdf:', pdf)
+
+            const email = await sendEmail("camposjosybett@gmail.com", `Ticket de compra ${newTicket.code}`, `Compra bajo el ticket ${newTicket.code}`, [pdf])
 
             return {
                 'success': true,
@@ -407,9 +415,12 @@ export class CartsManagerDao {
                 'message': message
             }
         } catch (error) {
-            console.error('Error al realizar la compra:', error);
-            await session.abortTransaction();
-            session.endSession();
+            console.error('Error al realizar la compra:', error)
+            if (sessionMongo) {
+                await sessionMongo.abortTransaction()
+                sessionMongo.endSession()
+            }
+            
             return {
                 'success': false,
                 'code': 500,

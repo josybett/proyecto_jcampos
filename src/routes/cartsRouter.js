@@ -10,4 +10,4 @@ router.post('/:cid/product/:pid', isAuthenticatedLogin, hasRole(['user']), addPr
 router.delete('/:cid/products/:pid', isAuthenticatedLogin, hasRole(['user']), deleteProductCart)
 router.put('/:cid', updateCart)
 router.delete('/:cid', deleteCart)
-router.post('/:cid/purchase', purchaseCart)
+router.post('/:cid/purchase', isAuthenticatedLogin, hasRole(['user']), purchaseCart)

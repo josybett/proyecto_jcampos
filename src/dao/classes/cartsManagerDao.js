@@ -3,11 +3,11 @@ import { logError } from "../../utils.js"
 import mongoose from "mongoose"
 import { ProductManagerDao } from "./productManagerDao.js"
 import { ticketModel } from "../models/ticketModel.js"
-import { v4 as uuidv4 } from 'uuid';
 import { UserReadDTO } from "../../DTO/userDto.js"
 import { productModel } from "../models/productModel.js"
 import { ticket } from "../../controllers/ticketPdfController.js"
 import { sendEmail } from "../../controllers/emailController.js"
+import { TicketDao } from "./ticketDao.js"
 
 export class CartsManagerDao {
     
@@ -259,7 +259,7 @@ export class CartsManagerDao {
     }
 
     async deleteCartProduct(id) {
-        if(!mongoose.Types.ObjectId.isValid(cid)) {
+        if(!mongoose.Types.ObjectId.isValid(id)) {
             return {
                 'success': false,
                 'code': 400,
@@ -306,16 +306,14 @@ export class CartsManagerDao {
 
     async purchaseCart(idCart, req) {
         try {
+            const ticketDao = new TicketDao()
             const sessionMongo = await mongoose.startSession()
             sessionMongo.startTransaction()
 
             const user = new UserReadDTO(req.user)
             let cart = {}
             let products = []
-            let productsNoStock = []
-            let productsTicket = []
             let resultUpdCart = {}
-            let newTicket = {}
             let message = 'Compra no procesada'
             if(!mongoose.Types.ObjectId.isValid(idCart)) {
                 return {
@@ -330,6 +328,7 @@ export class CartsManagerDao {
             } catch (error) {
                 return logError('updateCarts error mongose: ', 500, error)
             }
+
             if (cart == {}) {
                 return {
                     'success': false,
@@ -337,60 +336,25 @@ export class CartsManagerDao {
                     'message': `No existe carrito con id: ${id}`
                 }
             }
-            
-            for (const item of products) {
-                const producto = await productModel.findById(item.product).session(sessionMongo); // Usar la sesión
-        
-                if (!producto || producto.stock < item.quantity) {
-                    productsNoStock.push({product: item.produc,  quantity: item.quantity})
-                } else {
-                    productsTicket.push({product: item.product, quantity: item.quantity})
-                }
-            }
+
+            // Verificación de stock de productos
+            let { productsNoStock, productsTicket } = await this.productsStock(products, sessionMongo)
 
             if (productsTicket.length > 0) {
-                const [sumaTotalTickets] = await cartsModel.aggregate([
-                    { $unwind: '$products' },
-                    { $lookup: {
-                        from: 'products',
-                        localField: 'products.product',
-                        foreignField: '_id',
-                        as: 'productInfo'
-                    }},
-                    { $unwind: '$productInfo' },
-                    {$project: {
-                        'products.product': 1,
-                        'products.quantity': 1,
-                        'productInfo.price': 1,
-                        subtotal: { $multiply: ['$products.quantity', '$productInfo.price'] }
-                    }},
-                    {$group: {
-                        _id: '$_id',
-                        products: { $push: '$products' },
-                        amount: { $sum: '$subtotal' }
-                    }}
-                ], { sessionMongo });
-                
-                console.log(sumaTotalTickets.amount);
-                try {
-                    [newTicket] = await ticketModel.create([{
-                        code: uuidv4(),
-                        purchaser: user.email,
-                        purchase_datetime: new Date(),
-                        amount: sumaTotalTickets.amount,
-                        products: productsTicket
-                    }], { sessionMongo })
-                    console.log(newTicket)
-                } catch (error) {
-                    return logError('addCarts error mongoose: ', 500, error)
-                }
+                // Totalizar el valor de la compra
+                const sumaTotalTickets = await this.sumTotalTicket(sessionMongo)
+
+                // Crear el ticket de compra
+                const newTicket = await ticketDao.createTicket(user, sumaTotalTickets, productsTicket, sessionMongo)
+                message = `Creado ticket: ${newTicket.code}`
+
+                // Editar stock de productos
                 for (const item of productsTicket) {
                     await productModel.findByIdAndUpdate(item.product, { $inc: { stock: -item.quantity } }).session(sessionMongo); 
                 }
     
+                // Editar carrito con productos no procesados en la compra
                 resultUpdCart = await cartsModel.updateOne({_id: idCart }, { products: productsNoStock }).session(sessionMongo)
-                
-                console.log('resultUpdCart',resultUpdCart)
                 if(resultUpdCart.modifiedCount == 0) {
                     resp = {
                         'success': true,
@@ -398,17 +362,19 @@ export class CartsManagerDao {
                         'message': `No se concretó la modificación con id: ${id}`,
                     }
                 }
-                message = `Creado ticket: ${newTicket.code}`
+
+                await sessionMongo.commitTransaction()
+                sessionMongo.endSession()
+
+                // Envio de ticket pdf por correo
+                const ticketPdf = await ticketDao.getByIdTicket(newTicket._id)
+                const pdf = await ticket(ticketPdf)
+                await sendEmail(user.email, `Ticket de compra ${ticketPdf.code}`, `Compra bajo el ticket ${ticketPdf.code}`, [pdf])
+
+            } else {
+                message = 'No hay stock de los productos seleccionados en carrito'
             }
-
-            await sessionMongo.commitTransaction()
-            sessionMongo.endSession()
-
-            const pdf = await ticket()
-            console.error('pdf:', pdf)
-
-            const email = await sendEmail("camposjosybett@gmail.com", `Ticket de compra ${newTicket.code}`, `Compra bajo el ticket ${newTicket.code}`, [pdf])
-
+            
             return {
                 'success': true,
                 'code': 200,
@@ -427,5 +393,51 @@ export class CartsManagerDao {
                 'message': `Ocurrió un error intente de nuevo`
             }
         }
+    }
+
+    async productsStock(products, sessionMongo) {
+        let productsNoStock = []
+        let productsTicket = []
+        for (const item of products) {
+            const producto = await productModel.findById(item.product).session(sessionMongo); // Usar la sesión
+    
+            if (!producto || producto.stock < item.quantity) {
+                productsNoStock.push({product: item.produc,  quantity: item.quantity})
+            } else {
+                productsTicket.push({product: item.product, quantity: item.quantity})
+            }
+        }
+        return {
+            productsNoStock,
+            productsTicket
+        }
+    }
+
+    async sumTotalTicket(sessionMongo) {
+        const [sumaTotalTickets] = await cartsModel.aggregate([
+            { $unwind: '$products' },
+            { $lookup: {
+                from: 'products',
+                localField: 'products.product',
+                foreignField: '_id',
+                as: 'productInfo'
+            }},
+            { $unwind: '$productInfo' },
+            {$project: {
+                'products.product': 1,
+                'products.quantity': 1,
+                'productInfo.price': 1,
+                subtotal: { $multiply: ['$products.quantity', '$productInfo.price'] }
+            }},
+            {$group: {
+                _id: '$_id',
+                products: { $push: '$products' },
+                amount: { $sum: '$subtotal' }
+            }}
+        ], { sessionMongo });
+        
+        console.log(sumaTotalTickets.amount);
+
+        return sumaTotalTickets.amount ?? 0;
     }
 }

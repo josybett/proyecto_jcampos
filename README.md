@@ -36,7 +36,6 @@ http://localhost:8080/api/sessions/login
 }
 ```
 
-Login Usuario Admin
 ```sh
 // Request para iniciar sesión Login Admin
 {
@@ -51,65 +50,65 @@ http://localhost:8080/api/sessions/current
 ![alt text](src/images/postman/image-10.png)
 
 - [x] Cerrar sesión
-Método: POST
+- Método: POST
 http://localhost:8080/api/sessions/logout
-Nota: no requiere de body
+
 
 ### Api de producto
 - [x] Crear un producto
-Método: POST
-Reservada funciónpara rol admin
+- Método: POST
+- Reservada función para rol admin
 http://localhost:8080/api/products/
 ![alt text](src/images/postman/image-3.png)
 
 - [x] Obtener todos los productos
-Método: GET
+- Método: GET
 http://localhost:8080/api/products?limit=10
 ![alt text](src/images/postman/image-4.png)
 
 - [x] Obtener producto por id
-Método: GET
-http://localhost:8080/api/products/10
+- Método: GET
+http://localhost:8080/api/products/:idProduct
 ![alt text](src/images/postman/image-5.png)
 
 - [x] Editar un producto
-Método: PUT
-Reservada funciónpara rol admin
+- Método: PUT
+- Reservada funciónpara rol admin
 http://localhost:8080/api/products/10
 ![alt text](src/images/postman/image-6.png)
 
 - [x] Eliminar un producto
-Método: DELETE
-Reservada funciónpara rol admin
+- Método: DELETE
+- Reservada funciónpara rol admin
 http://localhost:8080/api/products/3
 ![alt text](src/images/postman/image-7.png)
 
 ### Api de carrito
 - [x] Crear un carrito de compras
-Método: POST
+- Método: POST
 http://localhost:8080/api/carts/
 ![alt text](src/images/postman/image-2.png)
 
 - [x] Agregar un producto al carrito
-Método: POST
+- Método: POST
 http://localhost:8080/api/carts/:idCarrito/product/:idProducto
 ![alt text](src/images/postman/image.png)
 
 - [x] Consultar productos del carrito
-Método: GET
+- Método: GET
 http://localhost:8080/api/carts/:id
 ![alt text](src/images/postman/image-1.png)
 
 - [x] Eliminar un producto del carrito
-Método: DELETE
+- Método: DELETE
 http://localhost:8080/api/carts/:idCarrito/product/:idProducto
 
 - [x] Vaciar carrito
-Método: DELETE
+- Método: DELETE
 http://localhost:8080/api/carts/:idCarrito
 
 - [x] Procesar compra
-Método: POST
+- Método: POST
 http://localhost:8080/api/carts/:idCarrito/purchase
 ![alt text](src/images/postman/image-11.png)
 

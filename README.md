@@ -11,7 +11,7 @@ Nota: actualmente está configurado con el puerto 8080
 ## Rutas de API
 ### Api Usuarios
 - [x] Registrar usuario
-Método: POST
+- Método: POST
 http://localhost:8080/api/sessions/register
 ```sh
 // Request para usuario
@@ -25,10 +25,11 @@ http://localhost:8080/api/sessions/register
 ```
 
 - [x] Iniciar sesión:
-Método: POST
+- Método: POST
 http://localhost:8080/api/sessions/login
-Login Usuario
+
 ```sh
+// Request para iniciar sesión Login Usuario
 {
     "email": "josybett@coderhouse.com",
     "password": "Test123"
@@ -37,6 +38,7 @@ Login Usuario
 
 Login Usuario Admin
 ```sh
+// Request para iniciar sesión Login Admin
 {
   "email": "admin@coderhouse.com",
   "password": "Admin123"
@@ -44,7 +46,7 @@ Login Usuario Admin
 ```
 
 - [x] Consultar usurario logueado
-Método: GET
+- Método: GET
 http://localhost:8080/api/sessions/current
 ![alt text](src/images/postman/image-10.png)
 

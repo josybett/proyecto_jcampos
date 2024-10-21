@@ -2,7 +2,7 @@
 		<div class="container">
 			<div class="breadcrumbs">
 				<ol class="breadcrumb">
-                    <li><a href="/">Productos</a></li>
+                    <li><a href="/products">Productos</a></li>
                     <li class="active">Carrito de Compras</li>
 				</ol>
 			</div>
@@ -58,16 +58,16 @@
 					<div class="total_area">
 						<ul>
 							<li>
-                            <input name="nombre" type="text" placeholder="Nombre" required />
+                            <input name="nombre" type="text" placeholder="Nombre" value="{{user.first_name}}" required />
                         </li>
 							<li>
-                            <input name="apellido" type="text" placeholder="Apellido" required />
+                            <input name="apellido" type="text" placeholder="Apellido" value="{{user.last_name}}" required />
                         </li>
 							<li>
-                            <input name="email" type="email" placeholder="Email" required />
+                            <input name="email" type="email" placeholder="Email" value="{{user.email}}" required />
                         </li>
 						</ul>
-							<a class="btn btn-default update" href="">Guardar orden</a>
+							<button class="btn btn-default update" onclick="purcharse()"  href="">Guardar orden</button>
 							<a class="btn btn-default check_out" href="">Cancelar</a>
 					</div>
 				</div>
@@ -76,4 +76,5 @@
 	</section>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="js/home.js"></script>
+<script src="/js/home.js"></script>
+<script src="/js/cart.js"></script>

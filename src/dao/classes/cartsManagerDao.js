@@ -374,7 +374,7 @@ export class CartsManagerDao {
             } else {
                 message = 'No hay stock de los productos seleccionados en carrito'
             }
-            
+            console.log('message', message)
             return {
                 'success': true,
                 'code': 200,

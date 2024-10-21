@@ -24,8 +24,9 @@ export const viewDetailProduct = async (req, res) => {
 export const viewCart = async (req, res) => {
     let id = req.params.cid
     let cart = await cm.getCartById(id)
+    const user = (req.user)
     console.log('cart', {cart: cart.data})
-    res.status(200).render('cart', {cart: cart.data})
+    res.status(200).render('cart', {cart: cart.data,  user})
 }
 
 export const viewLogin = (req, res) => {

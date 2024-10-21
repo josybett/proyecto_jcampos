@@ -58,7 +58,7 @@ socketServer.on("connect", () => {
     console.log(`Cliente conectado`)
 })
 
-// export default socketServer
+export default socketServer
 
 try {
     await mongoose.connect(config.MONGO_URL)

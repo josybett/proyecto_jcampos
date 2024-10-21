@@ -1,11 +1,29 @@
 # proyecto_jcampos
-Proyecto Backend
+Proyecto Backend express
+==========================
+### Descripción del proyecto
+Este proyecto es un backend desarrollado con Node.js y Express.js, que se utiliza para gestionar
+la información de un sistema ecommerce.
+### Características del proyecto
+- **Rutas**: El proyecto cuenta con varias rutas para gestionar la información de los productos y pedidos.
+- **Autenticación**: El proyecto utiliza la autenticación de JSON Web Tokens (JWT).
+También cuenta con middleware en las rutas que requieren un rol especifico.
+- **Base de datos**: El proyecto utiliza la base de datos MongoDB para almacenar la información de usuarios, productos y ticket de compra
+- **Validaciones**: El proyecto utiliza validaciones para asegurar que los datos ingresados sean correctos
+- **Documentación**: El proyecto cuenta con documentación para cada ruta y función
+- **Patrón de Diseño**: Respository para trabajar con el DAO la lógica del negocio
 
 ## Pruebas
-Ejecuta las pruebas con:
+
+- Crear archivo .env con los valores de .env.example
+
+- Ejecuta las pruebas con:
 ```sh
+npm install
 npm start
 ```
+
+
 Nota: actualmente está configurado con el puerto 8080
 
 ## Rutas de API
